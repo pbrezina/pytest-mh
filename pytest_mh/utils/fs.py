@@ -213,6 +213,20 @@ class LinuxFileSystem(MultihostReentrantUtility):
 
         return result.stdout
 
+    def read_binary(self, path: str) -> bytes:
+        """
+        Read remote file and return its contents as bytes.
+
+        :param path: File path.
+        :type path: str
+        :return: File contents.
+        :rtype: bytes
+        """
+        self.logger.info(f'Reading file "{path}"')
+        result = self.host.conn.exec(["base64", path], log_level=ProcessLogLevel.Error)
+
+        return base64.b64decode(result.stdout)
+
     def exists(self, path: str) -> bool:
         """
         Checks file or directory to see if they exist.
